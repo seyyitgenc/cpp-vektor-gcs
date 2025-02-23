@@ -1,0 +1,18 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ib/
+[Cc]onfiguration/config.h
+.clang-format
+.vscode
+[Ii]mgui.ini
+resources/objects/room
