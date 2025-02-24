@@ -17,4 +17,5 @@ file(GLOB SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC imgui)
+
 target_link_libraries(${PROJECT_NAME} glfw OpenGL::GL)

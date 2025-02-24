@@ -2,11 +2,11 @@
 
 #include "ImGuiPanel.hpp"
 
-class MainPanelGUI : public ImGuiPanel
+class RecieverTestGUI : public ImGuiPanel
 {
 public:
-    MainPanelGUI();
-    ~MainPanelGUI();
+    RecieverTestGUI();
+    ~RecieverTestGUI();
     void render() override;
 private:
 };

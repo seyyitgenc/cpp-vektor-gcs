@@ -62,7 +62,6 @@ bool ImGuiEngine::init() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     return true;
-
 }
 
 void ImGuiEngine::shutdown() {
