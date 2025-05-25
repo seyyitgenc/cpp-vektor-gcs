@@ -9,17 +9,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-file(GLOB SOURCES 
-    "imgui/*.*"
-    "imgui/backends/imgui_impl_glfw.*"
-    "imgui/backends/imgui_impl_opengl3.*"
+file(GLOB SOURCES
+    "src/vendor/imgui/*.*"
+    "src/vendor/implot/*.*"
     "src/*.*"
     "src/GUI/*.*")
 
 # add the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC imgui)
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    "${CMAKE_SOURCE_DIR}/src/vendor/imgui"
+    "${CMAKE_SOURCE_DIR}/src/vendor/implot"
+)
 
 target_link_libraries(${PROJECT_NAME} glfw OpenGL::GL)
 
