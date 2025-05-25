@@ -4,15 +4,13 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-namespace ImGui
-{
+namespace ImGui {
 // Custom ImGui controls for ImGui
 static ImVector<ImRect> s_GroupPanelLabelStack;
-static void BeginGroupPanel(const char* name, const ImVec2& size = {0, 0})
+static void BeginGroupPanel(const char* name, const ImVec2& size = { 0, 0 })
 {
     ImGui::BeginGroup();
 
-    auto cursorPos = ImGui::GetCursorScreenPos();
     auto itemSpacing = ImGui::GetStyle().ItemSpacing;
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
@@ -39,18 +37,18 @@ static void BeginGroupPanel(const char* name, const ImVec2& size = {0, 0})
     ImGui::Dummy(ImVec2(0.0, frameHeight + itemSpacing.y));
     ImGui::BeginGroup();
 
-    //ImGui::GetWindowDrawList()->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
+    // ImGui::GetWindowDrawList()->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
 
     ImGui::PopStyleVar(2);
 
 #if IMGUI_VERSION_NUM >= 17301
     ImGui::GetCurrentWindow()->ContentRegionRect.Max.x -= frameHeight * 0.5f;
-    ImGui::GetCurrentWindow()->WorkRect.Max.x          -= frameHeight * 0.5f;
-    ImGui::GetCurrentWindow()->InnerRect.Max.x         -= frameHeight * 0.5f;
+    ImGui::GetCurrentWindow()->WorkRect.Max.x -= frameHeight * 0.5f;
+    ImGui::GetCurrentWindow()->InnerRect.Max.x -= frameHeight * 0.5f;
 #else
     ImGui::GetCurrentWindow()->ContentsRegionRect.Max.x -= frameHeight * 0.5f;
 #endif
-    ImGui::GetCurrentWindow()->Size.x                   -= frameHeight;
+    ImGui::GetCurrentWindow()->Size.x -= frameHeight;
 
     auto itemWidth = ImGui::CalcItemWidth();
     ImGui::PushItemWidth(ImMax(0.0f, itemWidth - frameHeight));
@@ -92,18 +90,24 @@ static void EndGroupPanel()
     ImRect frameRect = ImRect(itemMin + halfFrame, itemMax - ImVec2(halfFrame.x, 0.0f));
     labelRect.Min.x -= itemSpacing.x;
     labelRect.Max.x += itemSpacing.x;
-    for (int i = 0; i < 4; ++i)
-    {
-        switch (i)
-        {
+    for (int i = 0; i < 4; ++i) {
+        switch (i) {
         // left half-plane
-        case 0: ImGui::PushClipRect(ImVec2(-FLT_MAX, -FLT_MAX), ImVec2(labelRect.Min.x, FLT_MAX), true); break;
+        case 0:
+            ImGui::PushClipRect(ImVec2(-FLT_MAX, -FLT_MAX), ImVec2(labelRect.Min.x, FLT_MAX), true);
+            break;
         // right half-plane
-        case 1: ImGui::PushClipRect(ImVec2(labelRect.Max.x, -FLT_MAX), ImVec2(FLT_MAX, FLT_MAX), true); break;
+        case 1:
+            ImGui::PushClipRect(ImVec2(labelRect.Max.x, -FLT_MAX), ImVec2(FLT_MAX, FLT_MAX), true);
+            break;
         // top
-        case 2: ImGui::PushClipRect(ImVec2(labelRect.Min.x, -FLT_MAX), ImVec2(labelRect.Max.x, labelRect.Min.y), true); break;
+        case 2:
+            ImGui::PushClipRect(ImVec2(labelRect.Min.x, -FLT_MAX), ImVec2(labelRect.Max.x, labelRect.Min.y), true);
+            break;
         // bottom
-        case 3: ImGui::PushClipRect(ImVec2(labelRect.Min.x, labelRect.Max.y), ImVec2(labelRect.Max.x, FLT_MAX), true); break;
+        case 3:
+            ImGui::PushClipRect(ImVec2(labelRect.Min.x, labelRect.Max.y), ImVec2(labelRect.Max.x, FLT_MAX), true);
+            break;
         }
 
         ImGui::GetWindowDrawList()->AddRect(
@@ -118,12 +122,12 @@ static void EndGroupPanel()
 
 #if IMGUI_VERSION_NUM >= 17301
     ImGui::GetCurrentWindow()->ContentRegionRect.Max.x += frameHeight * 0.5f;
-    ImGui::GetCurrentWindow()->WorkRect.Max.x          += frameHeight * 0.5f;
-    ImGui::GetCurrentWindow()->InnerRect.Max.x         += frameHeight * 0.5f;
+    ImGui::GetCurrentWindow()->WorkRect.Max.x += frameHeight * 0.5f;
+    ImGui::GetCurrentWindow()->InnerRect.Max.x += frameHeight * 0.5f;
 #else
     ImGui::GetCurrentWindow()->ContentsRegionRect.Max.x += frameHeight * 0.5f;
 #endif
-    ImGui::GetCurrentWindow()->Size.x                   += frameHeight;
+    ImGui::GetCurrentWindow()->Size.x += frameHeight;
 
     ImGui::Dummy(ImVec2(0.0f, 0.0f));
 

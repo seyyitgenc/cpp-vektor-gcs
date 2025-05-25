@@ -6,19 +6,21 @@
 class ImGuiPanel;
 class GLFWwindow;
 
-
-class ImGuiEngine
-{
+class ImGuiEngine {
 public:
     ImGuiEngine(GLFWwindow* window);
-    ~ImGuiEngine();
-    void addPanel(const std::string& name, ImGuiPanel *panel);
+    ImGuiEngine(const ImGuiEngine&) = default;
+    ImGuiEngine(ImGuiEngine&&) = default;
+
+    ~ImGuiEngine() = default;
+    void addPanel(const std::string& name, ImGuiPanel* panel);
     void render();
-    bool init();
+    auto init() -> bool;
     void shutdown();
 
-private:
+    void setupLayout();
 
+private:
     std::unordered_map<std::string, ImGuiPanel*> panels;
     GLFWwindow* _window;
 };

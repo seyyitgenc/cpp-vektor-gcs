@@ -1,31 +1,34 @@
-#include <GLFW/glfw3.h>
-
-#include "Globals.hpp"
+#include "Constants.hpp"
 #include "GUI/ImGuiEngine.hpp"
-#include "GUI/RecieverTestGUI.hpp"
-#include "GUI/TransmitterTestGUI.hpp"
-#include "GUI/SettingsGUI.hpp"
 #include "GUI/MessageInfoGUI.hpp"
+#include "GUI/RecieverTestGUI.hpp"
+#include "GUI/SettingsGUI.hpp"
+#include "GUI/TransmitterTestGUI.hpp"
+#include "Globals.hpp"
 
-// static void glfw_error_callback(int error, const char* description)
-// {
-//     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-// }
+namespace {
+
+void glfw_error_callback(int error, const char* description)
+{
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
+
+} // namespace
 
 // Main code
-int main(int, char**)
+auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
-    // glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit())
-    return false;
+    glfwSetErrorCallback(glfw_error_callback);
+    if (glfwInit())
+        return -1;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    gWindow = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    gWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME, nullptr, nullptr);
     if (gWindow == nullptr)
-        return false;
+        return -1;
 
     glfwMakeContextCurrent(gWindow);
     glfwSwapInterval(1); // Enable vsync
@@ -36,17 +39,16 @@ int main(int, char**)
     engine.addPanel("Transmitter Test", new TransmitterTestGUI());
     engine.addPanel("Message Info", new MessageInfoGUI());
     engine.addPanel("Settings", new SettingsGUI());
-    while (!glfwWindowShouldClose(gWindow))
-    {
+
+    while (!glfwWindowShouldClose(gWindow)) {
         glfwPollEvents();
-        if (glfwGetWindowAttrib(gWindow, GLFW_ICONIFIED) != 0)
-        {
+        if (glfwGetWindowAttrib(gWindow, GLFW_ICONIFIED) != 0) {
             continue;
         }
         engine.render();
         glfwSwapBuffers(gWindow);
     }
     engine.shutdown();
-    
+
     return 0;
 }

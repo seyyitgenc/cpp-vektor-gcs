@@ -1,10 +1,10 @@
 #include "ImGuiEngine.hpp"
 #include "ImGuiPanel.hpp"
 
-#include <imgui.h>
-#include <imgui_internal.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <imgui_internal.h>
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -12,11 +12,15 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-ImGuiEngine::ImGuiEngine(GLFWwindow* window) : _window(window) {}
+#include <format>
 
-ImGuiEngine::~ImGuiEngine() {}
+ImGuiEngine::ImGuiEngine(GLFWwindow* window)
+    : _window(window)
+{
+}
 
-void ImGuiEngine::addPanel(const std::string& name, ImGuiPanel *panel) {
+void ImGuiEngine::addPanel(const std::string& name, ImGuiPanel* panel)
+{
     if (panels.find(name) != panels.end()) {
         std::cout << "Panel with name " << name << " already exists" << std::endl;
         return;
@@ -24,7 +28,12 @@ void ImGuiEngine::addPanel(const std::string& name, ImGuiPanel *panel) {
     panels[name] = panel;
 }
 
-void ImGuiEngine::render() {
+void ImGuiEngine::setupLayout()
+{
+}
+
+void ImGuiEngine::render()
+{
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -44,14 +53,16 @@ void ImGuiEngine::render() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-bool ImGuiEngine::init() {
+bool ImGuiEngine::init()
+{
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Gamepad Controls
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -64,10 +75,10 @@ bool ImGuiEngine::init() {
     return true;
 }
 
-void ImGuiEngine::shutdown() {
+void ImGuiEngine::shutdown()
+{
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
-
