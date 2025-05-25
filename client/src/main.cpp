@@ -19,7 +19,7 @@ void glfw_error_callback(int error, const char* description)
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
     glfwSetErrorCallback(glfw_error_callback);
-    if (glfwInit())
+    if (!glfwInit())
         return -1;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

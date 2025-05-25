@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to the Debug directory
-cd bin/debug
+cd bin/server
 
 # Run the executable
-./flightpulsemonitor
+./flightpulsemonitor-server

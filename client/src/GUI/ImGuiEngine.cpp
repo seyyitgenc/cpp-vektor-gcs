@@ -30,6 +30,37 @@ void ImGuiEngine::addPanel(const std::string& name, ImGuiPanel* panel)
 
 void ImGuiEngine::setupLayout()
 {
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+    static ImGuiID dockspace_id = ImGui::GetID("Dockspace");
+
+    ImGui::DockSpaceOverViewport(dockspace_id, viewport);
+
+    // Create dockspace layout on first run
+    static auto first_time = true;
+    if (first_time) {
+        first_time = false;
+
+        ImGui::DockBuilderRemoveNode(dockspace_id);
+        ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+        // Set the dockspace to fill the entire viewport
+        ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+        // Split the dockspace into sections with better proportions
+        ImGuiID dock_main_id = dockspace_id;
+        ImGuiID dock_bottom_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.25f, nullptr, &dock_main_id);
+        ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.58f, nullptr, &dock_main_id);
+        ImGuiID dock_left_left_id = ImGui::DockBuilderSplitNode(dock_left_id, ImGuiDir_Left, 0.30f, nullptr, &dock_left_id);
+
+        // Dock windows into the layout
+        ImGui::DockBuilderDockWindow("Transmitter Test", dock_left_id);
+        ImGui::DockBuilderDockWindow("Reciever Test", dock_main_id);
+        ImGui::DockBuilderDockWindow("Message Info", dock_bottom_id);
+        ImGui::DockBuilderDockWindow("Settings", dock_left_left_id);
+
+        // Finalize the docking layout
+        ImGui::DockBuilderFinish(dockspace_id);
+    }
 }
 
 void ImGuiEngine::render()
@@ -37,8 +68,10 @@ void ImGuiEngine::render()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-    ImGui::DockSpaceOverViewport(ImGui::GetID("DockSpace"), ImGui::GetMainViewport());
 
+    setupLayout();
+
+    // Render all panels
     for (auto& panel : panels) {
         panel.second->render();
     }
