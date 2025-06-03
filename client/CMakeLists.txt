@@ -20,3 +20,4 @@ target_link_libraries(${CLIENT_NAME} glfw OpenGL::GL)
 
 # Enable all warnings for GCC/Clang
 target_compile_options(${CLIENT_NAME} PRIVATE -Wall -Wextra -Wpedantic -std=c++23)
+target_link_options(${CLIENT_NAME} PRIVATE -fsanitize=address,undefined)

@@ -19,13 +19,13 @@ ImGuiEngine::ImGuiEngine(GLFWwindow* window)
 {
 }
 
-void ImGuiEngine::addPanel(const std::string& name, ImGuiPanel* panel)
+void ImGuiEngine::addPanel(const std::string& name, std::unique_ptr<ImGuiPanel> panel)
 {
     if (panels.find(name) != panels.end()) {
         std::cout << "Panel with name " << name << " already exists" << std::endl;
         return;
     }
-    panels[name] = panel;
+    panels[name] = std::move(panel);
 }
 
 void ImGuiEngine::setupLayout()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <unordered_map>
 
 class ImGuiPanel;
@@ -13,7 +14,7 @@ public:
     ImGuiEngine(ImGuiEngine&&) = default;
 
     ~ImGuiEngine() = default;
-    void addPanel(const std::string& name, ImGuiPanel* panel);
+    void addPanel(const std::string& name, std::unique_ptr<ImGuiPanel> panel);
     void render();
     auto init() -> bool;
     void shutdown();
@@ -21,6 +22,6 @@ public:
     void setupLayout();
 
 private:
-    std::unordered_map<std::string, ImGuiPanel*> panels;
+    std::unordered_map<std::string, std::unique_ptr<ImGuiPanel>> panels;
     GLFWwindow* _window;
 };

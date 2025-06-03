@@ -12,7 +12,7 @@ constexpr int WINDOW_HEIGHT = 720;
 constexpr int OPENGL_PROFILE = GLFW_OPENGL_CORE_PROFILE;
 
 // Application name
-const char* APP_NAME = "Flight Pulse Monitor";
+constexpr const char* APP_NAME = "Flight Pulse Monitor";
 
 // Message types
 enum class MessageType : uint8_t {
