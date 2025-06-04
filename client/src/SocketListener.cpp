@@ -16,26 +16,27 @@ int SocketListener::readDatagram(char* m_buffer, int bufferSize)
     int n;
     socklen_t len;
 
-    std::cout << "Waiting for a message" << std::endl;
     n = recvfrom(m_sockfd, (char*)m_buffer, bufferSize,
         MSG_DONTWAIT, (struct sockaddr*)&servaddr,
         &len);
 
     if (n < 0) {
-        return -1; // Return -1 on error
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            // No data available, sleep briefly to avoid busy waiting
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            return 0; // Indicate no data received
+        }
+        return -1; // Real error
     }
-
-    m_buffer[n] = '\0';
     std::cout << "Server :" << m_buffer << std::endl;
+    return n;
 }
 
-int SocketListener::writeDatagram(char* buffer, int bufferSize)
+int SocketListener::writeDatagram(char* buffer)
 {
-    const char* hello = "Hello from client";
-    sendto(m_sockfd, (const char*)hello, strlen(hello),
+    return sendto(m_sockfd, (const char*)buffer, sizeof(buffer),
         MSG_CONFIRM, (const struct sockaddr*)&servaddr,
         sizeof(servaddr));
-    std::cout << "Hello message sent." << std::endl;
 }
 
 void SocketListener::setupPort(int port)
@@ -69,16 +70,9 @@ void SocketListener::setupPort(int port)
     // NO NEED TO SEND ANYTHING - just start listening!
     std::thread listenerThread([this]() {
         char buffer[1024];
-        int n;
 
         while (true) {
-            n = recvfrom(m_sockfd, buffer, 1024, 0, nullptr, nullptr);
-            if (n > 0) {
-                buffer[n] = '\0';
-                std::cout << "Received: " << buffer << std::endl;
-                NotifyListeners(buffer);
-            }
-            sendto(m_sockfd, buffer, n, 0, (const struct sockaddr*)&servaddr, sizeof(servaddr));
+            readDatagram(buffer, sizeof(buffer));
         }
     });
 

@@ -25,7 +25,7 @@ public:
     void setupPort(int port);
 
     int readDatagram(char* buffer, int bufferSize);
-    int writeDatagram(char* buffer, int bufferSize);
+    int writeDatagram(char* buffer);
 
     void addCallback(std::unique_ptr<Callback> callback)
     {
