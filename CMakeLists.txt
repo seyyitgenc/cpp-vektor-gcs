@@ -6,5 +6,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CLIENT_NAME "${PROJECT_NAME}-client")
 set(SERVER_NAME "${PROJECT_NAME}-server")
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/client/ ${CMAKE_SOURCE_DIR}/bin/client/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/server/ ${CMAKE_SOURCE_DIR}/bin/server/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Client/ ${CMAKE_SOURCE_DIR}/bin/client/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Server/ ${CMAKE_SOURCE_DIR}/bin/server/)

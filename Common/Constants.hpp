@@ -22,4 +22,6 @@ enum class MessageType : uint8_t {
     Debug
 };
 
+constexpr int BUFFER_SIZE = 1024; // Size of the buffer for network communication
+
 #endif

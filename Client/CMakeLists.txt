@@ -7,13 +7,18 @@ file(GLOB SOURCES
     "${CMAKE_SOURCE_DIR}/vendor/imgui/*.*"
     "${CMAKE_SOURCE_DIR}/vendor/implot/*.*"
     "src/*.*"
-    "src/GUI/*.*")
+    "src/GUI/*.*"
+
+    "${CMAKE_SOURCE_DIR}/Common/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/*.hpp")
+    
 
 add_executable(${CLIENT_NAME} ${SOURCES})
 
 target_include_directories(${CLIENT_NAME} PUBLIC 
     "${CMAKE_SOURCE_DIR}/vendor/imgui"
     "${CMAKE_SOURCE_DIR}/vendor/implot"
+    "${CMAKE_SOURCE_DIR}/"
 )
 
 target_link_libraries(${CLIENT_NAME} glfw OpenGL::GL)
