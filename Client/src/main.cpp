@@ -20,14 +20,13 @@ void glfw_error_callback(int error, const char* description)
 // Main code
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
-    UDPConnection connection(8081, 8080);
-    connection.bindSocket();
+    UDPConnection connection(SERVER_PORT, CLIENT_PORT);
     std::thread sendThread([&]() {
         while (true) {
             std::string message = std::format("Hello from client at {}", std::chrono::system_clock::now().time_since_epoch().count());
             std::array<char, BUFFER_SIZE> buffer {};
             std::copy(message.begin(), message.begin() + std::min(message.size(), static_cast<size_t>(BUFFER_SIZE - 1)), buffer.begin());
-            // int n = connection.writeDatagram(buffer);
+            int n = connection.writeDatagram(buffer);
 
             // if (n < 0) {
             //     std::cerr << "Error sending message." << std::endl;

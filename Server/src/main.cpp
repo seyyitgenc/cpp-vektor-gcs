@@ -14,8 +14,8 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    UDPConnection connection(8081, 8080);
-
+    UDPConnection connection(8080, 8081);
+    connection.bindSocket();
     std::thread sendThread([&]() {
         while (true) {
             std::string message = std::format("Hello from server at {}", std::chrono::system_clock::now().time_since_epoch().count());

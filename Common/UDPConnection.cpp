@@ -1,8 +1,8 @@
 #include "UDPConnection.hpp"
 
 UDPConnection::UDPConnection(int sourcePort, int destinationPort)
-    : m_client(sourcePort)
-    , m_server(destinationPort)
+    : m_srcConfig(sourcePort)
+    , m_dstConfig(destinationPort)
     , m_sockfd(-1)
 {
     // Initialize the socket here if needed
@@ -15,11 +15,11 @@ UDPConnection::UDPConnection(int sourcePort, int destinationPort)
 
 int UDPConnection::readDatagram(std::array<char, BUFFER_SIZE>& buffer)
 {
-    socklen_t len = sizeof(m_server.getAddress());
+    socklen_t len = sizeof(m_dstConfig.getAddress());
 
     // Receive messages from the client
     int n = recvfrom(m_sockfd, buffer.data(), buffer.size(), MSG_DONTWAIT,
-        (struct sockaddr*)&m_server.getAddress(), &len);
+        (struct sockaddr*)&m_dstConfig.getAddress(), &len);
 
     if (n < 0) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -47,7 +47,7 @@ int UDPConnection::writeDatagram(const std::array<char, BUFFER_SIZE>& buffer)
     }
 
     int n = sendto(m_sockfd, buffer.data(), buffer.size(),
-        0, (const struct sockaddr*)&m_client.getAddress(), sizeof(m_client.getAddress()));
+        0, (const struct sockaddr*)&m_dstConfig.getAddress(), sizeof(m_dstConfig.getAddress()));
 
     if (n < 0) {
         std::cerr << "Error sending message." << std::endl;

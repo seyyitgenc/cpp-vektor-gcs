@@ -24,4 +24,7 @@ enum class MessageType : uint8_t {
 
 constexpr int BUFFER_SIZE = 1024; // Size of the buffer for network communication
 
+constexpr int CLIENT_PORT = 8080; // Port for the client
+constexpr int SERVER_PORT = 8081; // Port for the server
+
 #endif
