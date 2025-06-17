@@ -10,7 +10,9 @@ file(GLOB SOURCES
     "src/GUI/*.*"
 
     "${CMAKE_SOURCE_DIR}/Common/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Common/*.hpp")
+    "${CMAKE_SOURCE_DIR}/Common/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Common/Protocl/*.hpp"
+    )
     
 
 add_executable(${CLIENT_NAME} ${SOURCES})

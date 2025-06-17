@@ -26,15 +26,15 @@ public: // Method to read a datagram from the socket
         }
     }
 
-    int readDatagram(std::array<char, BUFFER_SIZE>& buffer);
+    int readDatagram(std::array<char, 255>& buffer);
 
     // Method to write a datagram to the socket
-    int writeDatagram(const std::array<char, BUFFER_SIZE>& buffer);
+    int writeDatagram(const std::array<char, 255>& buffer);
 
 private:
     UDPSocketConfig m_srcConfig;
     UDPSocketConfig m_dstConfig;
 
     int m_sockfd;
-    char m_buffer[BUFFER_SIZE];
+    char m_buffer[255];
 };

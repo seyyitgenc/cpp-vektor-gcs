@@ -19,8 +19,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     std::thread sendThread([&]() {
         while (true) {
             std::string message = std::format("Hello from server at {}", std::chrono::system_clock::now().time_since_epoch().count());
-            std::array<char, BUFFER_SIZE> buffer {};
-            std::copy(message.begin(), message.begin() + std::min(message.size(), static_cast<size_t>(BUFFER_SIZE - 1)), buffer.begin());
+            std::array<char, 255> buffer {};
+            std::copy(message.begin(), message.begin() + std::min(message.size(), static_cast<size_t>(255 - 1)), buffer.begin());
             int n = connection.writeDatagram(buffer);
             // // Send a message to the client
             // int n = sendto(sockfd, (const char*)hello, strlen(hello),
@@ -32,7 +32,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     sendThread.detach(); // Detach the thread to run independently
 
     std::thread listenerThread([&]() {
-        std::array<char, BUFFER_SIZE> buffer;
+        std::array<char, 255> buffer;
         while (true) {
             int n = connection.readDatagram(buffer);
 

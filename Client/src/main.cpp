@@ -8,6 +8,8 @@
 #include "Common/Constants.hpp"
 #include "Common/UDPConnection.hpp"
 
+#include "Common/Packet.hpp"
+
 namespace {
 
 void glfw_error_callback(int error, const char* description)
@@ -20,13 +22,37 @@ void glfw_error_callback(int error, const char* description)
 // Main code
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
+    vek::GPSPacket gpsPack {
+        .timestamp = 1212323,
+        .latitude = 333,
+        .longitude = 444,
+        .altitude = 313131,
+        .speed = 2,
+        .heading = 330,
+    };
+
+    vek::Packet outPack {};
+    vek::packGPSPacket(gpsPack, outPack);
+    if (outPack.messageId == vek::GPS_MESSAGE_ID) {
+        vek::GPSPacket encodedGPSPack;
+        vek::encodeGPSPack(outPack, encodedGPSPack);
+        std::cout << encodedGPSPack.timestamp << std::endl;
+        std::cout << encodedGPSPack.latitude << std::endl;
+        std::cout << encodedGPSPack.longitude << std::endl;
+        std::cout << encodedGPSPack.altitude << std::endl;
+        std::cout << encodedGPSPack.speed << std::endl;
+        std::cout << encodedGPSPack.heading << std::endl;
+    } else {
+        std::cout << "Message is something else" << std::endl;
+    }
+
     UDPConnection connection(SERVER_PORT, CLIENT_PORT);
     std::thread sendThread([&]() {
         while (true) {
-            std::string message = std::format("Hello from client at {}", std::chrono::system_clock::now().time_since_epoch().count());
-            std::array<char, BUFFER_SIZE> buffer {};
-            std::copy(message.begin(), message.begin() + std::min(message.size(), static_cast<size_t>(BUFFER_SIZE - 1)), buffer.begin());
-            int n = connection.writeDatagram(buffer);
+            std::array<char, 255> buffer;
+            std::copy(outPack.payload, outPack.payload + 255, buffer.data());
+
+            [[maybe_unused]] int n = connection.writeDatagram(buffer);
 
             // if (n < 0) {
             //     std::cerr << "Error sending message." << std::endl;
@@ -40,7 +66,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
     sendThread.detach(); // Detach the thread to run independently
 
     std::thread listenerThread([&]() {
-        std::array<char, BUFFER_SIZE> buffer;
+        std::array<char, 255> buffer;
         while (true) {
             int n = connection.readDatagram(buffer);
 

@@ -1,5 +1,7 @@
 #include "UDPConnection.hpp"
 
+#include "Common/Protocol/Helpers.hpp"
+
 UDPConnection::UDPConnection(int sourcePort, int destinationPort)
     : m_srcConfig(sourcePort)
     , m_dstConfig(destinationPort)
@@ -13,7 +15,7 @@ UDPConnection::UDPConnection(int sourcePort, int destinationPort)
     }
 }
 
-int UDPConnection::readDatagram(std::array<char, BUFFER_SIZE>& buffer)
+int UDPConnection::readDatagram(std::array<char, 255>& buffer)
 {
     socklen_t len = sizeof(m_dstConfig.getAddress());
 
@@ -35,12 +37,14 @@ int UDPConnection::readDatagram(std::array<char, BUFFER_SIZE>& buffer)
     //     std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Avoid busy waiting
     //     continue; // No message received, continue to wait
     // }
-    std::cout << "Received message: " << std::string(buffer.data(), n) << std::endl;
+    uint64_t value = 0;
+    value = vek::readFromBuffer<uint64_t>((uint8_t*)buffer.data(), 0);
+    std::cout << "Received message: " << value << std::endl;
 
     return n;
 }
 
-int UDPConnection::writeDatagram(const std::array<char, BUFFER_SIZE>& buffer)
+int UDPConnection::writeDatagram(const std::array<char, 255>& buffer)
 {
     if (buffer.empty()) {
         return 0; // No data to write
