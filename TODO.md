@@ -4,7 +4,7 @@
 
 - [ ] Implement connection handling for UDP/serial ports
 - [ ] Create a configuration interface for port settings
-- [ ] Develop packet encoder/decoder for telemetry data
+- [ ] Develop Package encoder/decoder for telemetry data
 - [ ] Design efficient data buffering mechanism
 - [ ] Implement reconnection logic for lost connections
 - [ ] Add error handling for connection issues

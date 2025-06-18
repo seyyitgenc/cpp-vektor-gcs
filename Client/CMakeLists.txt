@@ -9,9 +9,12 @@ file(GLOB SOURCES
     "src/*.*"
     "src/GUI/*.*"
 
-    "${CMAKE_SOURCE_DIR}/Common/*.cpp"
     "${CMAKE_SOURCE_DIR}/Common/*.hpp"
-    "${CMAKE_SOURCE_DIR}/Common/Protocl/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Common/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/Protocol/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Common/Protocol/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/Packets/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/Packets/*.hpp"
     )
     
 

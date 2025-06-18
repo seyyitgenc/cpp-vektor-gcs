@@ -8,7 +8,8 @@
 #include "Common/Constants.hpp"
 #include "Common/UDPConnection.hpp"
 
-#include "Common/Packet.hpp"
+#include "Common/Package.hpp"
+#include "Common/Packages/GPSPackage.hpp"
 
 namespace {
 
@@ -22,7 +23,7 @@ void glfw_error_callback(int error, const char* description)
 // Main code
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
-    vek::GPSPacket gpsPack {
+    vek::GPSPackage gpsPack {
         .timestamp = 1212323,
         .latitude = 333,
         .longitude = 444,
@@ -31,11 +32,11 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
         .heading = 330,
     };
 
-    vek::Packet outPack {};
-    vek::packGPSPacket(gpsPack, outPack);
+    vek::Package outPack {};
+    vek::encodeGPSPackage(gpsPack, outPack);
     if (outPack.messageId == vek::GPS_MESSAGE_ID) {
-        vek::GPSPacket encodedGPSPack;
-        vek::encodeGPSPack(outPack, encodedGPSPack);
+        vek::GPSPackage encodedGPSPack;
+        vek::decodeGPSPackage(outPack, encodedGPSPack);
         std::cout << encodedGPSPack.timestamp << std::endl;
         std::cout << encodedGPSPack.latitude << std::endl;
         std::cout << encodedGPSPack.longitude << std::endl;
@@ -50,15 +51,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
     std::thread sendThread([&]() {
         while (true) {
             std::array<char, 255> buffer;
-            std::copy(outPack.payload, outPack.payload + 255, buffer.data());
+            packageToSendBuffer(outPack, buffer.data());
 
             [[maybe_unused]] int n = connection.writeDatagram(buffer);
 
-            // if (n < 0) {
-            //     std::cerr << "Error sending message." << std::endl;
-            // } else {
-            //     std::cout << "Message sent to server" << std::endl;
-            // }
             std::this_thread::sleep_for(std::chrono::seconds(2));
         }
     });

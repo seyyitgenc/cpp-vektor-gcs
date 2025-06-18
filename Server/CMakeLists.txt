@@ -4,7 +4,14 @@ file(GLOB SERVER_SOURCE
     "src/*.cpp"
     "${CMAKE_SOURCE_DIR}/Common/*.cpp"
     "${CMAKE_SOURCE_DIR}/Common/*.hpp"
+
+    "${CMAKE_SOURCE_DIR}/Common/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Common/*.cpp"
     "${CMAKE_SOURCE_DIR}/Common/Protocol/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Common/Protocol/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/Packets/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Common/Packets/*.hpp"
+
     )
 
 add_executable(${SERVER_NAME} ${SERVER_SOURCE})
