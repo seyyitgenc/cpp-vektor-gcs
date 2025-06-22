@@ -18,14 +18,37 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
     UDPConnection connection(8080, 8081);
     connection.bindSocket();
+
+    vek::GPSPackage gpsPack {
+        .timestamp = 1212323,
+        .latitude = 333,
+        .longitude = 444,
+        .altitude = 313131,
+        .speed = 2,
+        .heading = 330,
+    };
+
+    vek::Package outPack {};
+    vek::encodeGPSPackage(gpsPack, outPack);
+    if (outPack.messageId == vek::GPS_MESSAGE_ID) {
+        vek::GPSPackage decodedGPSPack;
+        vek::decodeGPSPackage(outPack, decodedGPSPack);
+        std::cout << decodedGPSPack.timestamp << std::endl;
+        std::cout << decodedGPSPack.latitude << std::endl;
+        std::cout << decodedGPSPack.longitude << std::endl;
+        std::cout << decodedGPSPack.altitude << std::endl;
+        std::cout << decodedGPSPack.speed << std::endl;
+        std::cout << decodedGPSPack.heading << std::endl;
+    } else {
+        std::cout << "Message is something else" << std::endl;
+    }
+
     std::thread sendThread([&]() {
         while (true) {
-            std::string message = std::format("Hello from server at {}", std::chrono::system_clock::now().time_since_epoch().count());
-            std::array<char, 255> buffer {};
-            std::copy(message.begin(), message.begin() + std::min(message.size(), static_cast<size_t>(255 - 1)), buffer.begin());
-            int n = connection.writeDatagram(buffer);
-            if (n > 0) {
-            }
+            std::array<char, 255> buffer;
+            packageToSendBuffer(outPack, buffer.data());
+
+            [[maybe_unused]] int n = connection.writeDatagram(buffer);
 
             // // Send a message to the client
             // int n = sendto(sockfd, (const char*)hello, strlen(hello),

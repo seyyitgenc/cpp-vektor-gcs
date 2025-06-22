@@ -4,8 +4,8 @@
 
 namespace vek {
 
-static constexpr int GPS_MESSAGE_ID = 0x01; // Unique identifier for GPS messages
-static constexpr int GPS_PACK_SIZE = 31;
+static constexpr int GPS_MESSAGE_ID = 3220; // Unique identifier for GPS messages
+static constexpr int GPS_PACK_SIZE = 36;
 
 struct GPSPackage {
     uint64_t timestamp = 0; // Timestamp in microseconds since epoch
@@ -29,9 +29,9 @@ int encodeGPSPackage(const GPSPackage& gpsPackage, Package& outPackage)
     putUInt64(buffer, 0, gpsPackage.timestamp);
     putUInt64(buffer, 8, gpsPackage.latitude);
     putUInt64(buffer, 16, gpsPackage.longitude);
-    putUInt64(buffer, 24, gpsPackage.altitude);
-    putFloat(buffer, 32, gpsPackage.speed);
-    putFloat(buffer, 36, gpsPackage.heading);
+    putFloat(buffer, 24, gpsPackage.altitude);
+    putFloat(buffer, 28, gpsPackage.speed);
+    putFloat(buffer, 32, gpsPackage.heading);
 
     memcpy(outPackage.payload, buffer, 40);
 
@@ -44,9 +44,9 @@ int decodeGPSPackage(const Package& package, GPSPackage& outPack)
     outPack.timestamp = readFromBuffer<uint64_t>(package.payload, 0);
     outPack.latitude = readFromBuffer<uint64_t>(package.payload, 8);
     outPack.longitude = readFromBuffer<uint64_t>(package.payload, 16);
-    outPack.altitude = readFromBuffer<uint64_t>(package.payload, 24);
-    outPack.speed = readFromBuffer<float>(package.payload, 32);
-    outPack.heading = readFromBuffer<float>(package.payload, 36);
+    outPack.altitude = readFromBuffer<float>(package.payload, 24);
+    outPack.speed = readFromBuffer<float>(package.payload, 28);
+    outPack.heading = readFromBuffer<float>(package.payload, 32);
     return 0;
 }
 
